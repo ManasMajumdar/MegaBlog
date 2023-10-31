@@ -18,8 +18,10 @@ export class AuthService {
             if (userAccount) {
               // return userAccount;
               //call another method
+              return this.login({email, password});
             }
             else{
+                // throw error;
                 return userAccount;
             }
         }catch(error){
@@ -27,7 +29,31 @@ export class AuthService {
         }
     }
 
-    
+    async login({email, password}) {
+        try{
+            return await this.account.createEmailSession(email, password);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getCurrentUser() {
+        try{
+            return await this.account.get();
+        } catch (error) {
+            // throw error;
+            console.log("Appwrite service :: getCurrentUser :: error", error);
+        }
+        return null;
+    }
+
+    async logout() {
+        try{
+            await this.account.deleteSession();
+        } catch (error) {
+            console.log("Appwrite service :: logout :: error", error);
+        }
+    }
 }
 
 const authService = new AuthService();
